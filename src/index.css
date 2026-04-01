@@ -1,0 +1,225 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-slate-950 text-slate-200;
+    overflow-x: hidden;
+  }
+}
+
+@layer utilities {
+  /* Efek Glassmorphism Kustom */
+  .vanta-glass {
+    @apply bg-slate-950/40 backdrop-blur-xl border border-white/10;
+  }
+
+  /* Gradasi Teks Futuristik */
+  .futuristic-text-gradient {
+    @apply bg-gradient-to-r from-cyan-400 via-teal-300 to-violet-500 bg-clip-text text-transparent;
+  }
+
+  /* Animasi Garis Batas Gradasi */
+  @keyframes gradient-border {
+    0%,
+    100% {
+      border-color: rgba(34, 211, 238, 0.5);
+    } /* cyan-400 */
+    50% {
+      border-color: rgba(139, 92, 246, 0.5);
+    } /* violet-500 */
+  }
+
+  .animate-gradient-border {
+    animation: gradient-border 4s ease-in-out infinite;
+  }
+
+  /* Efek Bersinar pada Tombol */
+  .btn-electric-cyan-glow {
+    @apply bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-extrabold py-4 px-10 rounded-full text-lg transition-all duration-300;
+    box-shadow:
+      0 0 20px rgba(34, 211, 238, 0.5),
+      inset 0 0 10px rgba(255, 255, 255, 0.2);
+  }
+
+  .btn-electric-cyan-glow:hover {
+    box-shadow:
+      0 0 30px rgba(34, 211, 238, 0.8),
+      inset 0 0 15px rgba(255, 255, 255, 0.4);
+    transform: translateY(-3px) scale(1.02);
+  }
+
+  /* --- ANIMASI: AURORA BLOBS --- */
+  @keyframes blob {
+    0% {
+      transform: translate(0px, 0px) scale(1);
+    }
+    33% {
+      transform: translate(30px, -50px) scale(1.1);
+    }
+    66% {
+      transform: translate(-20px, 20px) scale(0.9);
+    }
+    100% {
+      transform: translate(0px, 0px) scale(1);
+    }
+  }
+  .animate-blob {
+    animation: blob 10s infinite alternate;
+  }
+  .animation-delay-2000 {
+    animation-delay: 2s;
+  }
+  .animation-delay-4000 {
+    animation-delay: 4s;
+  }
+
+  /* --- BACKGROUND TECH GRID --- */
+  .bg-grid-pattern {
+    background-size: 50px 50px;
+    background-image:
+      linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+  }
+
+  /* --- ANIMASI BARU: INFINITE SCROLL / MARQUEE UNTUK PARTNER LOGISTIK --- */
+  @keyframes scroll {
+    0% {
+      transform: translateX(0);
+    }
+    100% {
+      transform: translateX(-50%);
+    }
+  }
+  .animate-scroll {
+    animation: scroll 30s linear infinite;
+    width: max-content;
+  }
+
+  /* --- EFEK BARU: SPOTLIGHT GLOW PADA BENTO CARDS --- */
+  .spotlight-card {
+    position: relative;
+    overflow: hidden;
+  }
+  .spotlight-card::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    /* Membuat cahaya radial cyan yang mengikuti variabel x dan y dari mouse */
+    background: radial-gradient(
+      800px circle at var(--mouse-x) var(--mouse-y),
+      rgba(34, 211, 238, 0.15),
+      transparent 40%
+    );
+    opacity: 0;
+    transition: opacity 0.5s;
+    z-index: 0;
+  }
+  .spotlight-card:hover::before {
+    opacity: 1;
+  }
+}
+
+/* Custom Scrollbar Premium */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  @apply bg-slate-950;
+}
+::-webkit-scrollbar-thumb {
+  @apply bg-slate-700 rounded-full border-2 border-slate-950;
+}
+::-webkit-scrollbar-thumb:hover {
+  @apply bg-cyan-500;
+}
+
+/* --- EFEK BARU: CYBER GLITCH TEXT --- */
+.glitch-wrapper {
+  position: relative;
+  display: inline-block;
+}
+
+.glitch-text {
+  position: relative;
+  display: inline-block;
+}
+
+.glitch-text::before,
+.glitch-text::after {
+  content: attr(data-text);
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: #020617; /* Warna background slate-950 biar nyatu */
+  z-index: 1;
+}
+
+.glitch-text::before {
+  left: 3px;
+  text-shadow: -2px 0 #22d3ee;
+  animation: glitch-anim-1 2.5s infinite linear alternate-reverse;
+}
+
+.glitch-text::after {
+  left: -3px;
+  text-shadow: -2px 0 #8b5cf6;
+  animation: glitch-anim-2 3s infinite linear alternate-reverse;
+}
+
+@keyframes glitch-anim-1 {
+  0% {
+    clip-path: inset(20% 0 80% 0);
+    transform: translate(-2px, 1px);
+  }
+  20% {
+    clip-path: inset(60% 0 10% 0);
+    transform: translate(2px, -1px);
+  }
+  40% {
+    clip-path: inset(40% 0 50% 0);
+    transform: translate(-2px, 2px);
+  }
+  60% {
+    clip-path: inset(80% 0 5% 0);
+    transform: translate(2px, -2px);
+  }
+  80% {
+    clip-path: inset(10% 0 70% 0);
+    transform: translate(-1px, 1px);
+  }
+  100% {
+    clip-path: inset(30% 0 20% 0);
+    transform: translate(1px, -1px);
+  }
+}
+
+@keyframes glitch-anim-2 {
+  0% {
+    clip-path: inset(10% 0 60% 0);
+    transform: translate(2px, -1px);
+  }
+  20% {
+    clip-path: inset(30% 0 20% 0);
+    transform: translate(-2px, 1px);
+  }
+  40% {
+    clip-path: inset(70% 0 10% 0);
+    transform: translate(2px, 2px);
+  }
+  60% {
+    clip-path: inset(20% 0 50% 0);
+    transform: translate(-2px, -2px);
+  }
+  80% {
+    clip-path: inset(50% 0 30% 0);
+    transform: translate(1px, 2px);
+  }
+  100% {
+    clip-path: inset(5% 0 80% 0);
+    transform: translate(-1px, -1px);
+  }
+}
