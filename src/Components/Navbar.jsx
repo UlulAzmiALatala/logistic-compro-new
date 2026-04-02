@@ -4,54 +4,58 @@ import { motion } from "framer-motion";
 export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
+  // Disesuaikan urutannya: Visi Misi -> Layanan -> Jangkauan -> Flow Chart -> Lokasi
   const menuItems = [
-    { href: "#layanan", label: "SERVICES" },
-    { href: "#digital", label: "PLATFORM" }, // Mengganti Dashboard sementara
-    { href: "#tentang", label: "SOLUTIONS" }, // Mengganti Tentang sementara
     { href: "#visimisi", label: "COMPANY" },
+    { href: "#layanan", label: "SERVICES" },
+    { href: "#network", label: "NETWORK" },
+    { href: "#timeline", label: "OPERATIONAL" },
+    { href: "#lokasi", label: "LOCATION" },
   ];
 
   return (
-    <header className="vanta-glass fixed top-0 left-0 w-full z-50 shadow-lg">
+    <header className="fixed top-0 left-0 w-full z-50 bg-white/95 backdrop-blur-md border-b border-slate-200 shadow-sm transition-all duration-300">
       <nav className="container mx-auto px-6 py-4 flex justify-between items-center">
+        {/* LOGO */}
         <div className="flex-shrink-0">
-          <a href="#beranda" className="flex items-center space-x-2">
-            {/* Placeholder Logo Glyph Violet Futuristik */}
-            <div className="w-8 h-8 rounded-lg flex items-center justify-center bg-violet-950/50 border border-violet-500/30">
-              <span className="text-violet-400 font-extrabold text-xl">A</span>
-            </div>
-            <span className="text-2xl font-extrabold tracking-tight uppercase text-slate-100">
-              AETHERA GLOBAL
-            </span>
+          <a href="#beranda">
+            <img
+              src="/logo-apl.jpeg"
+              alt="Logo PT. Agung Perkasa Logistics"
+              className="h-10 md:h-12 w-auto object-contain"
+            />
           </a>
         </div>
 
-        {/* Menu Desktop (Latar Gelap, Teks Cyan hover) */}
-        <div className="hidden md:flex items-center space-x-8 font-semibold tracking-wide text-sm">
+        {/* MENU DESKTOP */}
+        <div className="hidden md:flex items-center space-x-8 lg:space-x-10 font-bold tracking-tight text-sm">
           {menuItems.map((item) => (
             <a
               key={item.href}
               href={item.href}
-              className="text-slate-300 hover:text-cyan-400 transition-colors uppercase"
+              className="text-slate-600 hover:text-red-700 transition-colors uppercase"
             >
               {item.label}
             </a>
           ))}
-          {/* Tombol bersinar Cyan */}
+
+          {/* TOMBOL CTA */}
           <motion.a
-            href="#kontak"
-            className="bg-cyan-500 hover:bg-cyan-400 text-slate-950 px-5 py-2.5 rounded-full uppercase text-xs font-extrabold tracking-widest shadow-md shadow-cyan-500/20"
-            whileHover={{ scale: 1.05 }}
+            href="https://wa.me/6281295377824"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="bg-red-700 hover:bg-red-800 text-white px-7 py-2.5 rounded-md uppercase text-xs font-black tracking-widest shadow-md transition-all border-b-4 border-red-900 active:border-b-0 active:translate-y-1"
+            whileHover={{ scale: 1.02 }}
           >
-            INITIATE CONSULTATION
+            HUBUNGI KAMI
           </motion.a>
         </div>
 
-        {/* Tombol Hamburger Mobile */}
+        {/* MOBILE TOGGLE */}
         <div className="md:hidden">
           <button
             onClick={() => setIsMenuOpen(!isMenuOpen)}
-            className="text-slate-200 focus:outline-none"
+            className="text-slate-900"
           >
             <svg
               className="w-6 h-6"
@@ -70,28 +74,27 @@ export default function Navbar() {
         </div>
       </nav>
 
-      {/* Menu Dropdown Mobile (Dark Mode) */}
+      {/* MOBILE MENU */}
       <div
         className={`${
-          isMenuOpen ? "max-h-96" : "max-h-0"
-        } md:hidden bg-slate-900 overflow-hidden transition-all duration-500 ease-in-out border-t border-slate-800`}
+          isMenuOpen ? "max-h-[500px] opacity-100" : "max-h-0 opacity-0"
+        } md:hidden bg-white overflow-hidden transition-all duration-300 border-t border-slate-100 shadow-xl`}
       >
         {menuItems.map((item) => (
           <a
             key={item.href}
             href={item.href}
             onClick={() => setIsMenuOpen(false)}
-            className="block py-4 px-6 text-sm text-slate-200 hover:bg-slate-800 hover:text-cyan-400 border-b border-slate-800 uppercase tracking-wide font-medium"
+            className="block py-4 px-6 text-slate-800 font-bold hover:bg-red-50 hover:text-red-700 border-b border-slate-50 uppercase text-xs"
           >
             {item.label}
           </a>
         ))}
         <a
-          href="#kontak"
-          onClick={() => setIsMenuOpen(false)}
-          className="block py-4 px-6 text-sm text-cyan-400 font-bold hover:bg-slate-800 uppercase tracking-widest"
+          href="https://wa.me/6281295377824"
+          className="block py-5 px-6 text-red-700 font-black bg-red-50 uppercase text-xs tracking-widest"
         >
-          INITIATE CONSULTATION
+          HUBUNGI KAMI
         </a>
       </div>
     </header>
