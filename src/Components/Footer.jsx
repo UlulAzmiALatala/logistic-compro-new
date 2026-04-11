@@ -78,7 +78,7 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* KOLOM 3: KONTAK RESMI (DATA PDF) */}
+          {/* KOLOM 3: KONTAK RESMI & SOSIAL MEDIA */}
           <div>
             <h4 className="text-lg font-bold mb-6 border-l-4 border-red-600 pl-3">
               Kantor Pusat
@@ -100,6 +100,18 @@ export default function Footer() {
                 <span className="break-all">
                   agungsaryanto.apljkt@gmail.com
                 </span>
+              </li>
+              {/* INSTAGRAM SECTION */}
+              <li className="flex items-center gap-3 pt-2">
+                <span className="text-red-500">📸</span>
+                <a
+                  href="https://instagram.com/jasa_kiriman_murah_"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hover:text-red-500 transition-colors break-all"
+                >
+                  @jasa_kiriman_murah_
+                </a>
               </li>
             </ul>
           </div>

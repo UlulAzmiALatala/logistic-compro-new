@@ -72,31 +72,318 @@ const AnimatedSection = ({ children, id, className = "" }) => {
   );
 };
 
-// --- KOMPONEN 3D CONVEX AUTO-CAROUSEL ---
-const ConvexCarousel = ({ items }) => {
-  const [activeIndex, setActiveIndex] = useState(0);
+// --- KOMPONEN MODAL DETAIL LAYANAN (DENGAN SUPPORT VIDEO) ---
+const ServiceModal = ({ service, onClose }) => {
+  const [imgIndex, setImgIndex] = useState(0);
+  const [zoom, setZoom] = useState(1);
+  const [showDesc, setShowDesc] = useState(true);
+  const dragRef = useRef(null);
 
+  useEffect(() => {
+    setZoom(1);
+  }, [imgIndex]);
+
+  const handleZoomIn = (e) => {
+    e.stopPropagation();
+    setZoom((prev) => Math.min(prev + 0.5, 3));
+  };
+  const handleZoomOut = (e) => {
+    e.stopPropagation();
+    setZoom((prev) => Math.max(prev - 0.5, 1));
+  };
+
+  const nextImg = (e) => {
+    e.stopPropagation();
+    setImgIndex((prev) => (prev + 1) % service.images.length);
+  };
+  const prevImg = (e) => {
+    e.stopPropagation();
+    setImgIndex(
+      (prev) => (prev - 1 + service.images.length) % service.images.length,
+    );
+  };
+
+  const currentMedia = service.images[imgIndex];
+  const isVideo = currentMedia.endsWith(".mp4");
+
+  return (
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      className="fixed inset-0 z-[99999] flex items-center justify-center bg-slate-950/95 backdrop-blur-md overflow-hidden font-sans"
+      onClick={onClose}
+    >
+      <div
+        ref={dragRef}
+        className="absolute inset-0 flex items-center justify-center overflow-hidden"
+      >
+        <AnimatePresence mode="wait">
+          {isVideo ? (
+            <motion.video
+              key={`vid-${imgIndex}`}
+              src={currentMedia}
+              autoPlay
+              loop
+              muted
+              controls
+              playsInline
+              drag={zoom > 1}
+              dragConstraints={dragRef}
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: zoom }}
+              exit={{ opacity: 0, scale: 0.9 }}
+              transition={{ type: "spring", stiffness: 300, damping: 30 }}
+              className={`max-h-[85vh] max-w-[90vw] object-contain rounded-xl shadow-2xl ${zoom > 1 ? "cursor-grab active:cursor-grabbing" : ""}`}
+              onClick={(e) => e.stopPropagation()}
+            />
+          ) : (
+            <motion.img
+              key={`img-${imgIndex}`}
+              src={currentMedia}
+              alt={`${service.title} - ${imgIndex + 1}`}
+              drag={zoom > 1}
+              dragConstraints={dragRef}
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: zoom }}
+              exit={{ opacity: 0, scale: 0.9 }}
+              transition={{ type: "spring", stiffness: 300, damping: 30 }}
+              className={`max-h-[85vh] max-w-[90vw] object-contain rounded-xl shadow-2xl bg-slate-900 ${zoom > 1 ? "cursor-grab active:cursor-grabbing" : ""}`}
+              onClick={(e) => e.stopPropagation()}
+            />
+          )}
+        </AnimatePresence>
+      </div>
+
+      <button
+        className="absolute top-6 right-6 md:top-10 md:right-10 text-white/70 hover:text-white bg-slate-800/50 hover:bg-red-600 rounded-full p-3 transition-all z-50"
+        onClick={onClose}
+      >
+        <svg
+          className="w-6 h-6"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="2"
+            d="M6 18L18 6M6 6l12 12"
+          ></path>
+        </svg>
+      </button>
+
+      {service.images.length > 1 && (
+        <>
+          <button
+            onClick={prevImg}
+            className="absolute left-4 md:left-10 top-1/2 -translate-y-1/2 bg-slate-900/50 hover:bg-red-600 text-white p-3 rounded-full z-40 transition-colors"
+          >
+            <svg
+              className="w-6 h-6"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M15 19l-7-7 7-7"
+              ></path>
+            </svg>
+          </button>
+          <button
+            onClick={nextImg}
+            className="absolute right-4 md:right-10 top-1/2 -translate-y-1/2 bg-slate-900/50 hover:bg-red-600 text-white p-3 rounded-full z-40 transition-colors"
+          >
+            <svg
+              className="w-6 h-6"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M9 5l7 7-7 7"
+              ></path>
+            </svg>
+          </button>
+        </>
+      )}
+
+      <div
+        className="absolute bottom-6 left-1/2 -translate-x-1/2 flex items-center gap-4 bg-slate-900/80 p-2 rounded-full border border-slate-700 z-40"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <button
+          onClick={handleZoomOut}
+          disabled={zoom <= 1}
+          className="p-2 text-white hover:bg-slate-700 rounded-full disabled:opacity-30 disabled:hover:bg-transparent"
+        >
+          <svg
+            className="w-5 h-5"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="2"
+              d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM13 10H7"
+            ></path>
+          </svg>
+        </button>
+        <span className="text-white text-xs font-bold w-12 text-center">
+          {Math.round(zoom * 100)}%
+        </span>
+        <button
+          onClick={handleZoomIn}
+          disabled={zoom >= 3}
+          className="p-2 text-white hover:bg-slate-700 rounded-full disabled:opacity-30 disabled:hover:bg-transparent"
+        >
+          <svg
+            className="w-5 h-5"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="2"
+              d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7"
+            ></path>
+          </svg>
+        </button>
+      </div>
+
+      <div
+        className="absolute bottom-24 md:bottom-10 left-4 md:left-10 z-50 flex flex-col items-start max-w-md w-[calc(100%-2rem)] md:w-full"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <AnimatePresence>
+          {showDesc && (
+            <motion.div
+              initial={{ opacity: 0, y: 20, height: 0 }}
+              animate={{ opacity: 1, y: 0, height: "auto" }}
+              exit={{ opacity: 0, y: 20, height: 0 }}
+              className="bg-slate-900/80 backdrop-blur-lg border border-slate-700 p-6 rounded-2xl mb-4 overflow-hidden shadow-2xl"
+            >
+              <div className="flex items-center gap-4 mb-4 border-b border-slate-700 pb-4">
+                <span className="text-4xl">{service.icon}</span>
+                <h3 className="text-2xl font-black text-white uppercase">
+                  {service.title}
+                </h3>
+              </div>
+              <p className="text-slate-300 text-sm leading-relaxed mb-4">
+                {service.fullDesc}
+              </p>
+              {service.images.length > 1 && (
+                <div className="flex flex-wrap gap-2">
+                  {service.images.map((_, idx) => (
+                    <div
+                      key={idx}
+                      className={`h-1.5 rounded-full transition-all ${idx === imgIndex ? "w-6 bg-red-500" : "w-2 bg-slate-600"}`}
+                    />
+                  ))}
+                </div>
+              )}
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        <button
+          onClick={() => setShowDesc(!showDesc)}
+          className="bg-red-700 hover:bg-red-800 text-white px-5 py-2 rounded-full text-xs font-bold uppercase tracking-widest shadow-lg flex items-center gap-2"
+        >
+          {showDesc ? (
+            <>
+              <svg
+                className="w-4 h-4"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21"
+                ></path>
+              </svg>{" "}
+              Sembunyikan Keterangan
+            </>
+          ) : (
+            <>
+              <svg
+                className="w-4 h-4"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                ></path>
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268-2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+                ></path>
+              </svg>{" "}
+              Lihat Keterangan
+            </>
+          )}
+        </button>
+      </div>
+    </motion.div>
+  );
+};
+
+// --- KOMPONEN 3D CONVEX AUTO-CAROUSEL (DENGAN DRAG & SIDE-CLICK) ---
+const ConvexCarousel = ({ items, onSelectService }) => {
+  const [activeIndex, setActiveIndex] = useState(0);
   const displayItems = items.length === 4 ? [...items, ...items] : items;
 
+  // Auto-play interval yang cerdas (reset jika activeIndex berubah manual)
   useEffect(() => {
     const interval = setInterval(() => {
       setActiveIndex((prev) => (prev + 1) % displayItems.length);
-    }, 3000);
+    }, 5000); // 5 detik per putaran
     return () => clearInterval(interval);
-  }, [displayItems.length]);
+  }, [displayItems.length, activeIndex]);
+
+  // Fungsi untuk Handle Drag/Swipe
+  const handleDragEnd = (event, info) => {
+    if (info.offset.x > 50) {
+      // Geser ke Kanan (Previous Card)
+      setActiveIndex(
+        (prev) => (prev - 1 + displayItems.length) % displayItems.length,
+      );
+    } else if (info.offset.x < -50) {
+      // Geser ke Kiri (Next Card)
+      setActiveIndex((prev) => (prev + 1) % displayItems.length);
+    }
+  };
 
   return (
     <div
-      className="relative w-full h-[600px] md:h-[650px] flex justify-center items-center overflow-hidden"
+      className="relative w-full h-[600px] md:h-[650px] flex justify-center items-center overflow-hidden touch-pan-y"
       style={{ perspective: "1500px" }}
     >
       {displayItems.map((card, i) => {
         let offset =
           (i - activeIndex + displayItems.length) % displayItems.length;
-
-        if (offset > Math.floor(displayItems.length / 2)) {
+        if (offset > Math.floor(displayItems.length / 2))
           offset -= displayItems.length;
-        }
 
         const absOffset = Math.abs(offset);
         const isActive = offset === 0;
@@ -104,7 +391,18 @@ const ConvexCarousel = ({ items }) => {
         return (
           <motion.div
             key={i}
-            className="absolute top-1/2 left-1/2 corporate-glass rounded-[2rem] p-8 flex flex-col justify-between bg-white/95 border border-slate-200"
+            drag="x" // Mengaktifkan swipe ke kiri/kanan
+            dragConstraints={{ left: 0, right: 0 }} // Snap kembali setelah di-drag
+            dragElastic={0.2}
+            onDragEnd={handleDragEnd}
+            className="absolute top-1/2 left-1/2 corporate-glass rounded-[2rem] p-8 flex flex-col justify-between bg-white/95 border border-slate-200 cursor-pointer"
+            onClick={() => {
+              if (isActive) {
+                onSelectService(card); // Jika kartu di tengah, buka Modal
+              } else {
+                setActiveIndex(i); // Jika kartu di samping, geser ke tengah
+              }
+            }}
             animate={{
               x: `calc(-50% + ${offset * 320}px)`,
               y: "-50%",
@@ -112,9 +410,8 @@ const ConvexCarousel = ({ items }) => {
               rotateY: offset * -20,
               scale: isActive ? 1 : 0.85,
               opacity: absOffset >= 3 ? 0 : 1 - absOffset * 0.3,
-              pointerEvents: isActive ? "auto" : "none",
             }}
-            transition={{ duration: 0.8, ease: "easeInOut" }}
+            transition={{ duration: 0.6, ease: "easeOut" }}
             style={{
               width: "340px",
               height: "480px",
@@ -125,9 +422,10 @@ const ConvexCarousel = ({ items }) => {
               borderColor: isActive
                 ? "rgba(183, 28, 28, 0.4)"
                 : "rgba(226, 232, 240, 1)",
+              pointerEvents: absOffset >= 3 ? "none" : "auto", // Kartu di samping tetap bisa diklik
             }}
           >
-            <div className="relative z-10 text-center">
+            <div className="relative z-10 text-center pointer-events-none">
               <div
                 className={`w-20 h-20 mx-auto rounded-2xl flex items-center justify-center text-4xl mb-6 ${card.colorBox} shadow-sm transition-all duration-500`}
               >
@@ -138,16 +436,37 @@ const ConvexCarousel = ({ items }) => {
               >
                 {card.title}
               </h3>
-              <p className="text-slate-600 text-sm md:text-base leading-relaxed font-medium">
+              <p className="text-slate-600 text-sm md:text-base leading-relaxed font-medium line-clamp-4">
                 {card.desc}
               </p>
             </div>
 
             <div
-              className={`relative z-10 w-full h-12 border rounded-xl flex items-center justify-center text-xs font-bold mt-6 tracking-widest overflow-hidden transition-colors duration-500 ${isActive ? "bg-red-50 border-red-200" : "bg-slate-50 border-slate-200"}`}
+              className={`relative z-10 w-full h-12 border rounded-xl flex items-center justify-center text-xs font-bold mt-6 tracking-widest overflow-hidden transition-colors duration-500 ${isActive ? "bg-red-700 border-red-800 shadow-md group hover:bg-red-800" : "bg-slate-50 border-slate-200"}`}
             >
-              <span className={isActive ? "text-red-700" : "text-slate-400"}>
-                {isActive ? "LAYANAN TERSEDIA" : "BACA SELENGKAPNYA"}
+              <span
+                className={`flex items-center gap-2 ${isActive ? "text-white" : "text-slate-400"}`}
+              >
+                {isActive ? (
+                  <>
+                    LIHAT DETAIL{" "}
+                    <svg
+                      className="w-4 h-4 group-hover:translate-x-1 transition-transform"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        d="M14 5l7 7m0 0l-7 7m7-7H3"
+                      ></path>
+                    </svg>
+                  </>
+                ) : (
+                  "BACA SELENGKAPNYA"
+                )}
               </span>
             </div>
           </motion.div>
@@ -157,14 +476,22 @@ const ConvexCarousel = ({ items }) => {
   );
 };
 
+// HELPER FUNCTION: Meng-generate array path gambar
+const generatePaths = (prefix, count, ext = "jpeg") => {
+  return Array.from(
+    { length: count },
+    (_, i) => `/images/layanan/${prefix}-${i + 1}.${ext}`,
+  );
+};
+
 export default function Home() {
   const vantaRef = useRef(null);
   const [vantaEffect, setVantaEffect] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [loadingProgress, setLoadingProgress] = useState(0);
 
-  // State untuk menyimpan URL gambar yang sedang di-klik (Lightbox Modal)
   const [selectedImage, setSelectedImage] = useState(null);
+  const [selectedService, setSelectedService] = useState(null);
 
   const { scrollYProgress } = useScroll();
   const scaleX = useSpring(scrollYProgress, {
@@ -184,20 +511,17 @@ export default function Home() {
         return prev + Math.floor(Math.random() * 15) + 5;
       });
     }, 100);
-
     return () => clearInterval(timer);
   }, []);
 
   useEffect(() => {
     if (isLoading) return;
-
     let effect = null;
     const loadVanta = async () => {
       try {
         const THREE = await import("three");
         const GLOBE = (await import("vanta/dist/vanta.globe.min")).default;
         window.THREE = THREE;
-
         effect = GLOBE({
           el: vantaRef.current,
           THREE: THREE,
@@ -223,31 +547,50 @@ export default function Home() {
     };
   }, [isLoading]);
 
-  // DATA KONTEN
+  // DATA KONTEN LAYANAN
   const serviceCards = [
     {
+      id: "darat",
       icon: "🚚",
       title: "Cargo Darat",
       desc: "Layanan pengiriman barang via Trucking, serta melayani sewa Truck CDD, CDE, Fuso, Wingbox, Trailer, dll.",
+      fullDesc:
+        "PT. Agung Perkasa Logistics menyediakan armada darat yang komprehensif dan terawat untuk memastikan kelancaran distribusi barang Anda. Kami melayani Full Truck Load (FTL) maupun Less Than Truckload (LTL) dengan berbagai pilihan armada seperti Blind Van, CDD, CDE, Fuso, Wingbox, hingga Trailer.",
       colorBox: "bg-red-100 border-red-200 text-red-700",
+      images: generatePaths("cargo-darat", 9, "jpeg"),
     },
     {
+      id: "laut",
       icon: "🚢",
       title: "Cargo Laut",
       desc: "Layanan pengiriman via Kapal Pelni dan Kapal Cargo, serta melayani pengiriman LCL & FCL.",
+      fullDesc:
+        "Solusi logistik antar pulau yang efisien dan ekonomis. Layanan Cargo Laut kami mencakup pengiriman via Kapal RoRo, Kapal Pelni (Cepat), hingga Kapal Cargo Breakbulk. Kami memfasilitasi pengiriman skala kecil (LCL) hingga skala besar (FCL) dengan keamanan kargo yang terjamin.",
       colorBox: "bg-slate-200 border-slate-300 text-slate-800",
+      images: [
+        "/images/layanan/cargo-laut-1.jpeg",
+        "/images/layanan/cargo-laut-2.mp4",
+      ],
     },
     {
+      id: "udara",
       icon: "✈️",
       title: "Cargo Udara",
       desc: "Layanan pengiriman barang via udara dengan service Port To Port maupun Door To Door dengan aman dan cepat.",
+      fullDesc:
+        "Untuk kebutuhan distribusi yang sangat mendesak dan mengutamakan kecepatan waktu (Time-Sensitive), Cargo Udara adalah pilihan utama. Kami bekerja sama dengan maskapai terkemuka untuk menawarkan layanan pengiriman ekspres (Port-to-Port / Door-to-Door).",
       colorBox: "bg-red-100 border-red-200 text-red-700",
+      images: ["/images/layanan/cargo-udara-1.jpeg"],
     },
     {
+      id: "container",
       icon: "📦",
       title: "Cargo Container",
       desc: "Layanan sewa Container 20ft maupun 40ft untuk kebutuhan logistik dan pengiriman proyek berskala besar.",
+      fullDesc:
+        "Kami menangani logistik berskala industri dan pengiriman proyek berat. Layanan penyewaan container 20ft dan 40ft kami kelola secara profesional mulai dari pemuatan (stuffing), perizinan pelabuhan, hingga proses bongkar (stripping) di lokasi akhir Anda.",
       colorBox: "bg-slate-200 border-slate-300 text-slate-800",
+      images: generatePaths("cargo-container", 14, "jpeg"),
     },
   ];
 
@@ -337,18 +680,13 @@ export default function Home() {
         <Navbar />
 
         <main className="relative z-10">
-          {/* 1. HERO SECTION (Unsplash Background Image) */}
+          {/* 1. HERO SECTION */}
           <section
             id="beranda"
             className="min-h-screen flex items-center justify-center relative overflow-hidden pt-20"
           >
-            {/* Background Image Langsung Dari Unsplash (Tema Logistik/Kontainer Pelabuhan) */}
             <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?auto=format&fit=crop&w=2000&q=80')] bg-cover bg-center z-0"></div>
-
-            {/* Overlay Putih Agar Teks Terbaca Jelas */}
             <div className="absolute inset-0 bg-white/85 z-10"></div>
-
-            {/* Vanta Globe Effect */}
             <div
               ref={vantaRef}
               className="absolute inset-0 z-20 mix-blend-multiply opacity-60 pointer-events-none"
@@ -452,13 +790,17 @@ export default function Home() {
                 PRODUK <span className="text-red-700">LAYANAN</span>
               </h2>
               <p className="text-slate-500 mt-4 text-lg font-medium">
-                Pilih layanan logistik terbaik untuk kebutuhan bisnis Anda.
+                Geser (swipe) kartu, atau klik kartu di samping untuk melihat
+                detail layanan.
               </p>
             </div>
-            <ConvexCarousel items={serviceCards} />
+            <ConvexCarousel
+              items={serviceCards}
+              onSelectService={setSelectedService}
+            />
           </AnimatedSection>
 
-          {/* 4. JANGKAUAN LAYANAN (MAPS DENGAN LIGHTBOX CLICK) */}
+          {/* 4. JANGKAUAN LAYANAN */}
           <AnimatedSection
             id="network"
             className="py-24 bg-white relative border-y border-slate-200"
@@ -477,7 +819,6 @@ export default function Home() {
                   <h3 className="text-2xl font-bold mb-6 text-slate-800 border-b-4 border-red-600 pb-2">
                     Branch & Agen
                   </h3>
-                  {/* Menambahkan onClick dan cursor-pointer */}
                   <div
                     className="corporate-glass p-2 rounded-2xl w-full hover-lift cursor-pointer group relative"
                     onClick={() => setSelectedImage("/images/branch-agen.png")}
@@ -512,7 +853,6 @@ export default function Home() {
                   <h3 className="text-2xl font-bold mb-6 text-slate-800 border-b-4 border-red-600 pb-2">
                     Distribution / Trucking
                   </h3>
-                  {/* Menambahkan onClick dan cursor-pointer */}
                   <div
                     className="corporate-glass p-2 rounded-2xl w-full hover-lift cursor-pointer group relative"
                     onClick={() =>
@@ -624,7 +964,7 @@ export default function Home() {
             </div>
           </AnimatedSection>
 
-          {/* 6. CUSTOMER LIST (LOGO MARQUEE BERGERAK) */}
+          {/* 6. CUSTOMER LIST */}
           <section className="py-20 bg-white border-y border-slate-200 overflow-hidden flex flex-col relative z-20 shadow-sm">
             <div className="absolute left-0 top-0 bottom-0 w-32 bg-gradient-to-r from-white to-transparent z-10 pointer-events-none"></div>
 
@@ -658,7 +998,7 @@ export default function Home() {
             <div className="absolute right-0 top-0 bottom-0 w-32 bg-gradient-to-l from-white to-transparent z-10 pointer-events-none"></div>
           </section>
 
-          {/* 7. KANTOR PUSAT (GOOGLE MAPS SECTION) */}
+          {/* 7. KANTOR PUSAT */}
           <AnimatedSection
             id="lokasi"
             className="py-24 bg-slate-50 border-b border-slate-200"
@@ -734,7 +1074,7 @@ export default function Home() {
 
         <Footer />
 
-        {/* --- LIGHTBOX MODAL UNTUK PERBESAR GAMBAR PETA --- */}
+        {/* --- MODAL PETA LOKASI --- */}
         <AnimatePresence>
           {selectedImage && (
             <motion.div
@@ -743,7 +1083,7 @@ export default function Home() {
               exit={{ opacity: 0 }}
               transition={{ duration: 0.3 }}
               className="fixed inset-0 z-[99999] flex items-center justify-center bg-slate-900/90 p-4 md:p-10 backdrop-blur-sm"
-              onClick={() => setSelectedImage(null)} // Tutup saat klik background
+              onClick={() => setSelectedImage(null)}
             >
               <motion.div
                 initial={{ scale: 0.9, y: 20 }}
@@ -751,9 +1091,8 @@ export default function Home() {
                 exit={{ scale: 0.9, y: 20 }}
                 transition={{ type: "spring", damping: 25, stiffness: 300 }}
                 className="relative max-w-6xl w-full flex justify-center"
-                onClick={(e) => e.stopPropagation()} // Hindari tutup saat klik gambarnya
+                onClick={(e) => e.stopPropagation()}
               >
-                {/* Tombol Tutup (X) */}
                 <button
                   className="absolute -top-12 right-0 md:-right-12 text-white/70 hover:text-white transition-colors bg-slate-800/50 hover:bg-red-600 rounded-full p-2"
                   onClick={() => setSelectedImage(null)}
@@ -772,8 +1111,6 @@ export default function Home() {
                     ></path>
                   </svg>
                 </button>
-
-                {/* Gambar Detail (object-contain agar rasionya utuh tidak terpotong) */}
                 <img
                   src={selectedImage}
                   alt="Detail Jangkauan Layanan"
@@ -781,6 +1118,16 @@ export default function Home() {
                 />
               </motion.div>
             </motion.div>
+          )}
+        </AnimatePresence>
+
+        {/* --- MODAL DETAIL LAYANAN DENGAN SLIDER GAMBAR --- */}
+        <AnimatePresence>
+          {selectedService && (
+            <ServiceModal
+              service={selectedService}
+              onClose={() => setSelectedService(null)}
+            />
           )}
         </AnimatePresence>
       </div>
