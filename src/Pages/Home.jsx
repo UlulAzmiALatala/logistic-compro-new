@@ -654,11 +654,20 @@ export default function Home() {
   ];
 
   const clientsList = [
+    { name: "BGR Logistics", logo: "/images/client-bgr.png" },
+    { name: "PT Catur Global Logistik", logo: "/images/client-catur.png" },
+    { name: "CKL Cargo", logo: "/images/client-ckl.png" },
     { name: "Crystal Tech", logo: "/images/client-crystal.png" },
-    { name: "Synergy Solusi", logo: "/images/client-synergy.png" },
-    { name: "ProMinent", logo: "/images/client-prominent.jpg" },
-    { name: "Sindo TV", logo: "/images/client-sindo.jpg" },
+    { name: "PT Duta Hita Jaya", logo: "/images/client-dhj.jpg" },
+    { name: "PT Kino Indonesia Tbk.", logo: "/images/client-kino.jpg" },
     { name: "Mitsubishi", logo: "/images/client-mitsubishi.png" },
+    { name: "PT Nindya Karya", logo: "/images/client-nindya.jpg" },
+    { name: "ProMinent", logo: "/images/client-prominent.jpg" },
+    { name: "Seryu Cargo", logo: "/images/client-seryu.png" },
+    { name: "Sindo TV", logo: "/images/client-sindo.jpg" },
+    { name: "Synergy Solusi", logo: "/images/client-synergy.png" },
+    { name: "Toll", logo: "/images/client-toll.png" },
+    { name: "Bimaruna Jaya", logo: "/images/client-bimaruna.jpg" },
   ];
 
   const timelineNodes = [
