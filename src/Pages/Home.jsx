@@ -596,7 +596,8 @@ export default function Home() {
         "/images/layanan/laut/cargo-laut9.jpg",
         "/images/layanan/laut/cargo-laut10.jpg",
         "/images/layanan/laut/cargo-laut11.jpeg",
-        "/images/layanan/laut/cargo-laut12.mp4",
+        "/images/layanan/laut/cargo-laut12.png",
+        "/images/layanan/laut/cargo-laut13.mp4",
       ],
     },
     {
@@ -619,6 +620,8 @@ export default function Home() {
         "/images/layanan/udara/cargo-udara9.jpg",
         "/images/layanan/udara/cargo-udara10.jpg",
         "/images/layanan/udara/cargo-udara11.jpeg",
+        "/images/layanan/udara/cargo-udara12.jpeg",
+        "/images/layanan/udara/cargo-udara13.jpeg",
       ],
     },
     {
@@ -645,7 +648,7 @@ export default function Home() {
         "/images/layanan/container/cargo-container13.jpeg",
         "/images/layanan/container/cargo-container14.jpeg",
         "/images/layanan/container/cargo-container15.jpg",
-        "/images/layanan/container/cargo-container16.jpg",
+        "/images/layanan/container/cargo-container16.jpeg",
       ],
     },
   ];
