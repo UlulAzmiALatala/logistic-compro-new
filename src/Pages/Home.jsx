@@ -73,6 +73,7 @@ const AnimatedSection = ({ children, id, className = "" }) => {
 };
 
 // --- KOMPONEN MODAL DETAIL LAYANAN (DENGAN SUPPORT VIDEO) ---
+// --- KOMPONEN MODAL DETAIL LAYANAN (DENGAN SUPPORT VIDEO) ---
 const ServiceModal = ({ service, onClose }) => {
   const [imgIndex, setImgIndex] = useState(0);
   const [zoom, setZoom] = useState(1);
@@ -134,7 +135,8 @@ const ServiceModal = ({ service, onClose }) => {
               animate={{ opacity: 1, scale: zoom }}
               exit={{ opacity: 0, scale: 0.9 }}
               transition={{ type: "spring", stiffness: 300, damping: 30 }}
-              className={`max-h-[85vh] max-w-[90vw] object-contain rounded-xl shadow-2xl ${zoom > 1 ? "cursor-grab active:cursor-grabbing" : ""}`}
+              /* PENAMBAHAN w-full h-full DI SINI AGAR VIDEO MEMBESAR OTOMATIS */
+              className={`w-full h-full max-h-[85vh] max-w-[90vw] object-contain rounded-xl shadow-2xl ${zoom > 1 ? "cursor-grab active:cursor-grabbing" : ""}`}
               onClick={(e) => e.stopPropagation()}
             />
           ) : (
@@ -148,7 +150,8 @@ const ServiceModal = ({ service, onClose }) => {
               animate={{ opacity: 1, scale: zoom }}
               exit={{ opacity: 0, scale: 0.9 }}
               transition={{ type: "spring", stiffness: 300, damping: 30 }}
-              className={`max-h-[85vh] max-w-[90vw] object-contain rounded-xl shadow-2xl bg-slate-900 ${zoom > 1 ? "cursor-grab active:cursor-grabbing" : ""}`}
+              /* PENAMBAHAN w-full h-full DI SINI AGAR GAMBAR KECIL DIPAKSA MELAR */
+              className={`w-full h-full max-h-[85vh] max-w-[90vw] object-contain rounded-xl shadow-2xl bg-slate-900 ${zoom > 1 ? "cursor-grab active:cursor-grabbing" : ""}`}
               onClick={(e) => e.stopPropagation()}
             />
           )}
@@ -547,7 +550,7 @@ export default function Home() {
     };
   }, [isLoading]);
 
-  // DATA KONTEN LAYANAN
+  // DATA KONTEN LAYANAN (Disesuaikan dengan folder Tree)
   const serviceCards = [
     {
       id: "darat",
@@ -557,7 +560,21 @@ export default function Home() {
       fullDesc:
         "PT. Agung Perkasa Logistics menyediakan armada darat yang komprehensif dan terawat untuk memastikan kelancaran distribusi barang Anda. Kami melayani Full Truck Load (FTL) maupun Less Than Truckload (LTL) dengan berbagai pilihan armada seperti Blind Van, CDD, CDE, Fuso, Wingbox, hingga Trailer.",
       colorBox: "bg-red-100 border-red-200 text-red-700",
-      images: generatePaths("cargo-darat", 9, "jpeg"),
+      images: [
+        "/images/layanan/darat/cargo-darat1.jpeg",
+        "/images/layanan/darat/cargo-darat2.jpeg",
+        "/images/layanan/darat/cargo-darat3.jpeg",
+        "/images/layanan/darat/cargo-darat4.jpeg",
+        "/images/layanan/darat/cargo-darat5.jpeg",
+        "/images/layanan/darat/cargo-darat6.jpeg",
+        "/images/layanan/darat/cargo-darat7.jpg",
+        "/images/layanan/darat/cargo-darat8.jpeg",
+        "/images/layanan/darat/cargo-darat9.jpeg",
+        "/images/layanan/darat/cargo-darat10.jpg",
+        "/images/layanan/darat/cargo-darat11.jpg",
+        "/images/layanan/darat/cargo-darat12.jpg",
+        "/images/layanan/darat/cargo-darat13.jpeg",
+      ],
     },
     {
       id: "laut",
@@ -568,8 +585,18 @@ export default function Home() {
         "Solusi logistik antar pulau yang efisien dan ekonomis. Layanan Cargo Laut kami mencakup pengiriman via Kapal RoRo, Kapal Pelni (Cepat), hingga Kapal Cargo Breakbulk. Kami memfasilitasi pengiriman skala kecil (LCL) hingga skala besar (FCL) dengan keamanan kargo yang terjamin.",
       colorBox: "bg-slate-200 border-slate-300 text-slate-800",
       images: [
-        "/images/layanan/cargo-laut-1.jpeg",
-        "/images/layanan/cargo-laut-2.mp4",
+        "/images/layanan/laut/cargo-laut1.jpg",
+        "/images/layanan/laut/cargo-laut2.jpg",
+        "/images/layanan/laut/cargo-laut3.jpg",
+        "/images/layanan/laut/cargo-laut4.jpg",
+        "/images/layanan/laut/cargo-laut5.jpg",
+        "/images/layanan/laut/cargo-laut6.jpg",
+        "/images/layanan/laut/cargo-laut7.jpg",
+        "/images/layanan/laut/cargo-laut8.jpg",
+        "/images/layanan/laut/cargo-laut9.jpg",
+        "/images/layanan/laut/cargo-laut10.jpg",
+        "/images/layanan/laut/cargo-laut11.jpeg",
+        "/images/layanan/laut/cargo-laut12.mp4",
       ],
     },
     {
@@ -580,7 +607,19 @@ export default function Home() {
       fullDesc:
         "Untuk kebutuhan distribusi yang sangat mendesak dan mengutamakan kecepatan waktu (Time-Sensitive), Cargo Udara adalah pilihan utama. Kami bekerja sama dengan maskapai terkemuka untuk menawarkan layanan pengiriman ekspres (Port-to-Port / Door-to-Door).",
       colorBox: "bg-red-100 border-red-200 text-red-700",
-      images: ["/images/layanan/cargo-udara-1.jpeg"],
+      images: [
+        "/images/layanan/udara/cargo-udara1.jpg",
+        "/images/layanan/udara/cargo-udara2.jpg",
+        "/images/layanan/udara/cargo-udara3.jpg",
+        "/images/layanan/udara/cargo-udara4.jpg",
+        "/images/layanan/udara/cargo-udara5.jpg",
+        "/images/layanan/udara/cargo-udara6.jpg",
+        "/images/layanan/udara/cargo-udara7.jpg",
+        "/images/layanan/udara/cargo-udara8.jpg",
+        "/images/layanan/udara/cargo-udara9.jpg",
+        "/images/layanan/udara/cargo-udara10.jpg",
+        "/images/layanan/udara/cargo-udara11.jpeg",
+      ],
     },
     {
       id: "container",
@@ -590,7 +629,24 @@ export default function Home() {
       fullDesc:
         "Kami menangani logistik berskala industri dan pengiriman proyek berat. Layanan penyewaan container 20ft dan 40ft kami kelola secara profesional mulai dari pemuatan (stuffing), perizinan pelabuhan, hingga proses bongkar (stripping) di lokasi akhir Anda.",
       colorBox: "bg-slate-200 border-slate-300 text-slate-800",
-      images: generatePaths("cargo-container", 14, "jpeg"),
+      images: [
+        "/images/layanan/container/cargo-container1.jpeg",
+        "/images/layanan/container/cargo-container2.jpeg",
+        "/images/layanan/container/cargo-container3.jpeg",
+        "/images/layanan/container/cargo-container4.jpeg",
+        "/images/layanan/container/cargo-container5.jpeg",
+        "/images/layanan/container/cargo-container6.jpeg",
+        "/images/layanan/container/cargo-container7.jpeg",
+        "/images/layanan/container/cargo-container8.jpeg",
+        "/images/layanan/container/cargo-container9.jpeg",
+        "/images/layanan/container/cargo-container10.jpeg",
+        "/images/layanan/container/cargo-container11.jpeg",
+        "/images/layanan/container/cargo-container12.jpeg",
+        "/images/layanan/container/cargo-container13.jpeg",
+        "/images/layanan/container/cargo-container14.jpeg",
+        "/images/layanan/container/cargo-container15.jpg",
+        "/images/layanan/container/cargo-container16.jpg",
+      ],
     },
   ];
 
